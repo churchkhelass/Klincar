@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import { View, Button, FlatList, StyleSheet } from 'react-native';
 import ListItem from '../../components/ListItem';
 import InputField from '../../components/InputField';
+import LocationSender from '../../components/LocationSender';
+import * as Notifications from 'expo-notifications';
 
 export default function HomeScreen() {
   const [text, onChangeText] = useState('');
@@ -19,6 +21,13 @@ export default function HomeScreen() {
       nameInputRef.current?.focus();
     }
   };
+  
+  const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permission for notifications was denied');
+    }
+  };
 
   const deleteItem = (id) => {
     setItems(items.filter(item => item.id !== id));
@@ -26,6 +35,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.mainContainer}>
+      <LocationSender />
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View>
           <InputField
